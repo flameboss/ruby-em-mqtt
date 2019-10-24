@@ -7,6 +7,10 @@ class EventMachine::MQTT::ClientConnection < EventMachine::MQTT::Connection
   attr_reader :clean_session
   attr_reader :username
   attr_reader :password
+  attr_reader :will_topic
+  attr_reader :will_payload
+  attr_reader :will_qos
+  attr_reader :will_retain
   attr_reader :packet_id
   attr_reader :ack_timeout
   attr_reader :timer
@@ -56,6 +60,10 @@ class EventMachine::MQTT::ClientConnection < EventMachine::MQTT::Connection
     @username = nil
     @password = nil
     @timer = nil
+    @will_topic = nil
+    @will_payload = nil
+    @will_qos = 0
+    @will_retain = false
 
     if args.is_a?(Hash)
       args.each_pair do |k,v|
@@ -76,7 +84,11 @@ class EventMachine::MQTT::ClientConnection < EventMachine::MQTT::Connection
       :clean_session => @clean_session,
       :keep_alive => @keep_alive,
       :username => @username,
-      :password => @password
+      :password => @password,
+      :will_topic => @will_topic,
+      :will_payload => @will_payload,
+      :will_qos => @will_qos,
+      :will_retain => @will_retain
     )
 
     send_packet(packet)
