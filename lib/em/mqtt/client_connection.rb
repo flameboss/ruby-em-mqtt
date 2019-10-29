@@ -14,6 +14,7 @@ class EventMachine::MQTT::ClientConnection < EventMachine::MQTT::Connection
   attr_reader :packet_id
   attr_reader :ack_timeout
   attr_reader :timer
+  attr_reader :error
 
   # Connect to an MQTT server
   #
@@ -64,6 +65,7 @@ class EventMachine::MQTT::ClientConnection < EventMachine::MQTT::Connection
     @will_payload = nil
     @will_qos = 0
     @will_retain = false
+    @error = nil
 
     if args.is_a?(Hash)
       args.each_pair do |k,v|
@@ -201,7 +203,8 @@ private
 
   def connect_ack(packet)
     if packet.return_code != 0x00
-      raise MQTT::ProtocolException.new(packet.return_msg)
+      @error = "connect ack error code #{packet.return_msg}"
+      disconnect false
     else
       @state = :connected
     end
