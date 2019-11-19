@@ -193,10 +193,7 @@ private
     elsif state == :connected and packet.class == MQTT::Packet::Suback
       # Subscribed!
     else
-      # FIXME: deal with other packet types
-      raise MQTT::ProtocolException.new(
-        "Wasn't expecting packet of type #{packet.class} when in state #{state}"
-      )
+      @error = "Wasn't expecting packet of type #{packet.class} when in state #{state}"
       disconnect
     end
   end
